@@ -7,6 +7,7 @@ License: GNU GPLv3 http://www.gnu.org/licenses/gpl.html
 
 from __future__ import print_function
 
+import math
 import sys
 from operator import itemgetter
 
@@ -39,6 +40,16 @@ def AllModes(hist):
     """
     return sorted(hist.Items(), key = lambda p: -p[1])
 
+def cohen_d(firsts,others):
+    n1 = len(firsts)
+    n2 = len(others)
+    pooled_var = (n1 * firsts.var() + n2 * others.var()) / (n1 + n2)
+    S = math.sqrt(pooled_var)
+    d = (firsts.mean() - others.mean()) / S
+
+    return d
+
+
 
 def main(script):
     """Tests the functions in this module.
@@ -62,6 +73,7 @@ def main(script):
         print(value, freq)
 
     print('%s: All tests passed.' % script)
+    print("Cohen's d:", cohen_d(firsts.totalwgt_lb,others.totalwgt_lb))
 
 
 if __name__ == '__main__':
